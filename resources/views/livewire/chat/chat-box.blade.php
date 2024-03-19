@@ -221,7 +221,7 @@ class="w-full overflow-hidden">
                             type="text"
                             autocomplete="off"
                             autofocus
-                            placeholder="write your message here"
+                            placeholder="Enter your message"
                             maxlength="1700"
                             class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg  focus:outline-none"
                      >
