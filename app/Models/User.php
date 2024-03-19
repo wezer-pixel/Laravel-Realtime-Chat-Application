@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -33,20 +34,37 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+
+    // public function conversations()
+    // {
+
+    //     return $this->hasMany(Conversation::class,'sender_id')->orWhere('receiver_id',$this->id)->whereNotDeleted();
+    // }
+    public function conversations()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return Conversation::where(function ($query) {
+            $query->where('sender_id', $this->id)
+                ->orWhere('receiver_id', $this->id);
+        })
+            ->whereNotDeleted()
+            ->latest('updated_at');
     }
 
-    public function conversation()
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     */
+    public function receivesBroadcastNotificationsOn(): string
     {
-        return $this->hasMany(Conversation::class, 'sender_id')->orWhere('receiver_id', $this->id);
+        return 'users.' . $this->id;
     }
 }
