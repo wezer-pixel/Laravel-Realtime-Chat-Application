@@ -43,28 +43,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-    // public function conversations()
-    // {
-
-    //     return $this->hasMany(Conversation::class,'sender_id')->orWhere('receiver_id',$this->id)->whereNotDeleted();
-    // }
+    /**
+     * conversations of the user.
+     */
     public function conversations()
     {
-        return Conversation::where(function ($query) {
-            $query->where('sender_id', $this->id)
-                ->orWhere('receiver_id', $this->id);
-        })
-            ->whereNotDeleted()
-            ->latest('updated_at');
+        return $this->hasMany(Conversation::class, 'sender_id')->orWhere('receiver_id', $this->id);
     }
 
-
-    /**
-     * The channels the user receives notification broadcasts on.
-     */
-    public function receivesBroadcastNotificationsOn(): string
-    {
-        return 'users.' . $this->id;
-    }
 }
