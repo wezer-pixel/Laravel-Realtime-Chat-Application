@@ -86,6 +86,5 @@
 
     </main>
 
-    {{-- Footer --}}
-
+    {{-- Send message --}}
 </div>
