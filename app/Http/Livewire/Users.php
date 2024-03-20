@@ -8,14 +8,6 @@ use Livewire\Component;
 
 class Users extends Component
 {
-    public $selectedUserId = null;
-
-    public function setSelectedUserId($id)
-    {
-        dd($id);
-        //  $this->selectedUserId = $id;
-    }
-
     public function message($selectedUserId)
     {
         dd($selectedUserId);
