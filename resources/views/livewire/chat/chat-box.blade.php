@@ -1,4 +1,14 @@
-<div class="w-full overflow-hidden">
+<div 
+    x-data="{height:0, conversationElement:document.getElementById('conversation')}"
+    x-init="
+        height = conversationElement.scrollHeight;
+        $nextTick(() => conversationElement.scrollTop = height);
+    "
+
+    @scroll-bottom.window="
+    $nextTick(() => conversationElement.scrollTop = height);
+    "
+    class="w-full overflow-hidden">
     <div class="border-b flex flex-col overflow-y-scroll grow h-full">
         {{--Header --}}
         <header class="w-full sticky inset-x-0 flex top-0 pb-[5px] pt-[5px] z-10 bg-white border-b">
@@ -21,7 +31,7 @@
         </header>
 
         {{-- Body --}}
-        <main class="flex flex-col gap-3 p-2.5 overflow-y-auto flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
+        <main id="conversation" class="flex flex-col gap-3 p-2.5 overflow-y-auto flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
 
             {{-- Messages --}}
             @if ($loadedMessages)
@@ -120,7 +130,7 @@
                                     class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg focus:outline-none"
                                 >
 
-                            <button x-bind:disabled="!body.trim()" type="submit" class="col-span-2">Send</button>
+                            <button x-bind:disabled="!body.trim()"  type="submit" class="col-span-2">Send</button>
                         </div>
                 </form>
                 @error('body')
