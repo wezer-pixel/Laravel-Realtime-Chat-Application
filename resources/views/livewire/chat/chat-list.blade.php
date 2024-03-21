@@ -40,7 +40,7 @@
             
                 @foreach ($conversations as $key => $conversation)
     
-                    <li class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2'bg-gray-100/70 {{$conversation->id == $selectedConversation->id ? 'bg-gray-100': ''}}">
+                    <li class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2'bg-gray-100/70 {{$conversation->id == $selectedConversation?->id ? 'bg-gray-100': ''}}">
                         <a href="#" class="shrink-0">
                             <x-avatar src="https://source.unsplash.com/500x500?face-{{$key}}" />
                         </a>
@@ -53,7 +53,7 @@
                                     <h6 class="truncate font-medium tracking-wider text-gray-900">
                                         {{$conversation->getReceiver()->name}}
                                     </h6>
-                                <small class="text-gray-700">{{$conversation->messages?->last()?->created_at?->shortAbsoluteForHumans()}}</small> 
+                                <small class="text-gray-700">{{$conversation->messages?->last()?->created_at->diffForHumans() }}</small> 
                                 </div>
 
                                 {{-- Chat Message --}}
