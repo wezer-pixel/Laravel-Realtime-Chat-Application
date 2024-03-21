@@ -57,8 +57,8 @@
                                     'text-gray-500'=>!($message->sender_id == auth()->id()),
                                     'text-white'=>$message->sender_id == auth()->id(),
                                 ])>
-                                    {{-- Bug in timezone, use diffForHumans --}}
-                                    {{$message->created_at->diffForHumans()}}
+                                    
+                                    {{$message->created_at->format('g:i a')}}
 
                                 </p>
 
