@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Chat;
 
 use App\Models\Message;
+use App\Notifications\MessageSent;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ChatBox extends Component
@@ -11,6 +13,25 @@ class ChatBox extends Component
     public $body;
     public $loadedMessages;
     public $paginate_var = 10;
+
+    protected $listeners = [
+        'loadMoreMessages',
+    ];
+
+    public function getListeners()
+    {
+        $auth_id = auth()->user()->id;
+
+        return [
+            'loadMoreMessages',
+            "echo-private:users.{$auth_id},.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" => 'broadcastedNotification',
+        ];
+    }
+
+    public function broadcastedNotification($event)
+    {
+        dd($event);
+    }
     
 
     public function loadMoreMessages(): void
@@ -59,6 +80,15 @@ class ChatBox extends Component
 
         # refresh chat list
         $this->dispatch('refresh')->to('chat.chat-list');
+
+        # broadcast message
+        $this->selectedConversation->getReceiver()
+            ->notify(new MessageSent(
+                Auth()->user(),
+                $createdMessage,
+                $this->selectedConversation,
+                $this->selectedConversation->getReceiver()->id
+            ));
 
     }
 
