@@ -31,14 +31,32 @@ $nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window=
 
             {{-- Messages --}}
             @if ($loadedMessages)
+            
+            @php
+                $previousMessage = null;
+            @endphp
 
-            @foreach ($loadedMessages as $message)
+            @foreach ($loadedMessages as $key => $message)
+
+            {{-- track revious message --}}
+            @if ($key>0)
+                @php
+                    $previousMessage = $loadedMessages[$key-1];
+                @endphp
+            @endif
+
+
+            
             <div @class([ 'max-w-[85%] md:max-w-[78%] flex w-auto gap-2 relative mt-2' , 'ml-auto'=> $message->sender_id
                 == auth()->id(),
                 ])>
 
                 {{-- Avatar --}}
-                <div @class(['shrink-0'])>
+                <div @class([
+                    'shrink-0',
+                    'invisible' => $previousMessage?->sender_id == $message->sender_id,
+                    'hidden'=> $message->sender_id == auth()->id(),
+                    ])>
 
                     <x-avatar />
 

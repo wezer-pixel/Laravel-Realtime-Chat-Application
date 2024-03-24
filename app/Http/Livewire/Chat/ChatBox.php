@@ -35,6 +35,13 @@ class ChatBox extends Component
 
         $this->loadedMessages->push($createdMessage);
 
+        # update last message in conversation
+        $this->selectedConversation->updated_at = now();
+        $this->selectedConversation->save();
+
+        # refresh chat list
+        $this->dispatch('refresh')->to('chat.chat-list');
+
     }
 
     /* First func to call on load page */
