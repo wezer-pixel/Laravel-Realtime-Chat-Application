@@ -63,6 +63,10 @@
                         {{-- Chat Message --}}
                         <div class="flex items-center gap-x-2">
 
+                           
+                            @if ($conversation->messages?->last()?->sender_id == auth()->id())
+
+                            @if ($conversation->isLastMessageReadByUser())
                             {{-- double tick --}}
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -72,24 +76,33 @@
                                     <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708" />
                                 </svg>
                             </span>
-
+                            @else
                             {{-- single tick --}}
-                            {{-- <span>
+                            <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-check2" viewBox="0 0 16 16">
                                     <path
                                         d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
                                 </svg>
-                            </span> --}}
+                            </span>
+                                
+                            @endif
+                                
+                            @endif
+                            
+
+                            
                             <p class="grow truncate text-sm font-[100]">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet delectus dolorem
-                                corrupti officia sapiente, error minus modi a autem aspernatur fuga id expedita
-                                blanditiis magni cumque aliquid? Expedita, adipisci nihil?
+                                {{$conversation->messages?->last()?->body?? 'Start a conversation...'}}
                             </p>
 
                             {{--- unread count --}}
-                            <span
-                                class="px-2 text-xs font-bold text-white rounded-full shrink-0 bg-emerald-700">5</span>
+                            @if ($conversation->unreadMessagesCount() > 0)
+                            <span class="px-2 text-xs font-bold text-white rounded-full shrink-0 bg-emerald-700">
+                                {{$conversation->unreadMessagesCount()}}
+                            </span>
+                            @endif
+                            
 
 
 

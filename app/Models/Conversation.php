@@ -31,8 +31,7 @@ class Conversation extends Model
         } else {
 
             return User::firstWhere('id',$this->sender_id);
-        }
-        
+        }     
 
     }
 

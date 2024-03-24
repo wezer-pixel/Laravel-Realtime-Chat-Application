@@ -10,10 +10,28 @@ class ChatBox extends Component
     public $selectedConversation;
     public $body;
     public $loadedMessages;
+    public $paginate_var = 10;
+    
+
+    public function loadMoreMessages(): void
+    {
+        // problem with alpine js will check the scroll function later
+        // dd('load More'); 
+        $this->paginate_var += 10;
+        $this->loadMessages(); 
+        $this->dispatch('update-chat-height');
+    }
 
     public function loadMessages()
     {
-        $this->loadedMessages = Message::where('conversation_id', $this->selectedConversation->id)->get();
+        #get count of messages
+        $count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+
+        # Skip and take messages
+        $this->loadedMessages = Message::where('conversation_id', $this->selectedConversation->id)
+        ->skip($count - $this->paginate_var)
+        ->take($this->paginate_var)
+        ->get();
     }
 
     public function sendMessage()

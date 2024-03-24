@@ -1,5 +1,5 @@
 <div x-data="{ height: 0, conversationElement: document.getElementById('conversation') }" x-init="height = conversationElement.scrollHeight;
-$nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window="
+    $nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window="
     $nextTick(() => conversationElement.scrollTop = height);
     " class="w-full overflow-hidden">
     <div class="flex flex-col h-full overflow-y-scroll border-b grow">
@@ -26,35 +26,47 @@ $nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window=
         </header>
 
         {{-- Body --}}
-        <main id="conversation"
+        <main 
+        x-data="{ scropTop: 0 }" 
+        x-init="conversationElement.addEventListener('scroll', () => {
+            scropTop = conversationElement.scrollTop;
+        });" 
+        @scroll="if (scropTop == 0) { $wire.loadMoreMessages(); }" 
+        
+        @update-chat-event.window="
+            newHeight = $el.scrollHeight;
+            oldHeight = height;
+            $el.scrollTop = newHeight - oldHeight;
+            height = newHeight;
+        "
+         
+            id="conversation"
             class="flex flex-col gap-3 p-2.5 overflow-y-auto flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
 
             {{-- Messages --}}
             @if ($loadedMessages)
-            
+
             @php
-                $previousMessage = null;
+            $previousMessage = null;
             @endphp
 
             @foreach ($loadedMessages as $key => $message)
 
             {{-- track revious message --}}
             @if ($key>0)
-                @php
-                    $previousMessage = $loadedMessages[$key-1];
-                @endphp
+            @php
+            $previousMessage = $loadedMessages[$key-1];
+            @endphp
             @endif
 
 
-            
+
             <div @class([ 'max-w-[85%] md:max-w-[78%] flex w-auto gap-2 relative mt-2' , 'ml-auto'=> $message->sender_id
                 == auth()->id(),
                 ])>
 
                 {{-- Avatar --}}
-                <div @class([
-                    'shrink-0',
-                    'invisible' => $previousMessage?->sender_id == $message->sender_id,
+                <div @class([ 'shrink-0' , 'invisible'=> $previousMessage?->sender_id == $message->sender_id,
                     'hidden'=> $message->sender_id == auth()->id(),
                     ])>
 
@@ -123,7 +135,7 @@ $nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window=
         {{-- Send message --}}
         <footer class="inset-x-0 z-10 bg-white shrink-0">
             <div class="p-2 border-t">
-                <form x-data="{ body: @entangle('body') }" @submit.prevent="$wire.sendMessage" method="POST"
+                <form x-data="{ body: @entangle('body') }", @submit.prevent="$wire.sendMessage" method="POST"
                     autocapitalize="off">
                     @csrf
                     <input type="hidden" autocomplete="false" style="display: none">

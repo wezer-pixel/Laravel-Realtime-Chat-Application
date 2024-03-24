@@ -9,6 +9,9 @@ class ChatList extends Component
     public $selectedConversation;
     public $query;
 
+    protected $listeners = ["refresh"=> "refresh"];
+    
+
     public function render()
     {
 
