@@ -1,6 +1,7 @@
 <div x-data="{ height: 0, conversationElement: document.getElementById('conversation') }" x-init="height = conversationElement.scrollHeight;
-    $nextTick(() => conversationElement.scrollTop = height);" @scroll-bottom.window="
-    $nextTick(() => conversationElement.scrollTop = height);
+    $nextTick(() => conversationElement.scrollTop = height);" 
+    @scroll-bottom.window="
+    $nextTick(() => conversationElement.scrollTop = conversationElement.scrollHeight);
     " class="w-full overflow-hidden">
     <div class="flex flex-col h-full overflow-y-scroll border-b grow">
         {{-- Header --}}
@@ -61,7 +62,9 @@
 
 
 
-            <div @class([ 'max-w-[85%] md:max-w-[78%] flex w-auto gap-2 relative mt-2' , 'ml-auto'=> $message->sender_id
+            <div
+            wire:key="{{time().$key}}"
+            @class([ 'max-w-[85%] md:max-w-[78%] flex w-auto gap-2 relative mt-2' , 'ml-auto'=> $message->sender_id
                 == auth()->id(),
                 ])>
 

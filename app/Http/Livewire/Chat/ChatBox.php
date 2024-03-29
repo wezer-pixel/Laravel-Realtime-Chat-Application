@@ -30,14 +30,13 @@ class ChatBox extends Component
 
     public function broadcastedNotification($event)
     {
-        dd($event);
+        // dd($event);
     }
     
 
     public function loadMoreMessages(): void
     {
-        // problem with alpine js will check the scroll function later
-        // dd('load More'); 
+        
         $this->paginate_var += 10;
         $this->loadMessages(); 
         $this->dispatch('update-chat-height');
