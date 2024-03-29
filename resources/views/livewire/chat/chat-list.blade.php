@@ -144,6 +144,8 @@
                                     </button>
 
                                     <button
+                                    onclick="confirm('Are you sure?') || event.stopImmediatePropagation()"
+                                    wire:click="deleteByUser('{{encrypt($conversation->id)}}')"
                                         class="flex items-center w-full gap-3 px-4 py-2 text-sm leading-5 text-left text-gray-500 transition-all duration-150 ease-in-out hover:bg-rose-100 focus:outline-none focus:bg-gray-100">
 
                                         <span>
